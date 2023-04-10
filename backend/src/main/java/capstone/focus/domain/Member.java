@@ -32,4 +32,10 @@ public class Member {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime expiredAt;
 
+    public void update(String name, String accessToken, String refreshToken) {
+        this.name = name;
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+        this.expiredAt = LocalDateTime.now().plusHours(1);
+    }
 }
