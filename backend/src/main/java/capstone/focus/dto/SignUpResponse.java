@@ -4,11 +4,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter
-@Setter
 public class SignUpResponse {
 
-    private Long memberId;
-    private String message;
+    private final Long memberId;
+    private final String message;
 
     public SignUpResponse(Long memberId, String message) {
         this.memberId = memberId;
