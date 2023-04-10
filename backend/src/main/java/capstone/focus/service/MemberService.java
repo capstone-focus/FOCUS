@@ -2,6 +2,7 @@ package capstone.focus.service;
 
 import capstone.focus.domain.Member;
 import capstone.focus.dto.LoginRequest;
+import capstone.focus.dto.SignUpResponse;
 import capstone.focus.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,8 +29,12 @@ public class MemberService {
         member.update(loginRequest.getName(), loginRequest.getAccessToken(), loginRequest.getRefreshToken());
     }
 
-    public void signUp(LoginRequest loginRequest) {
-        // TODO 회원 가입하고 id와 success 메시지 반환
+    public SignUpResponse signUp(LoginRequest loginRequest) {
+        Member member = loginRequest.toMember();
+        memberRepository.save(member);
+
+        Long memberId = member.getId();
+        return new SignUpResponse(memberId, "First Login Success");
     }
 
 }

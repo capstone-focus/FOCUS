@@ -27,7 +27,6 @@ public class MemberController {
             return ResponseEntity.ok(message);
         }
 
-        //return ResponseEntity.ok().body(memberService.signUp(loginRequest)).build();
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(memberService.signUp(loginRequest));
     }
 }
