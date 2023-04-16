@@ -27,10 +27,10 @@ public class BookService {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
         Page<Book> books = bookRepository.findAll(pageable);
 
-        List<BookResponse> list = books.stream()
+        List<BookResponse> booksResponse = books.stream()
                 .map(book -> new BookResponse(book))
                 .collect(Collectors.toList());
 
-        return new BookListResponse(list);
+        return new BookListResponse(booksResponse);
     }
 }
