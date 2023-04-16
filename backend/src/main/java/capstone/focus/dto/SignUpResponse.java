@@ -1,7 +1,6 @@
 package capstone.focus.dto;
 
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
 public class SignUpResponse {
