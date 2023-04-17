@@ -1,9 +1,12 @@
 package capstone.focus.service;
 
 import capstone.focus.domain.Book;
+import capstone.focus.domain.Chapter;
+import capstone.focus.domain.ChapterId;
 import capstone.focus.dto.BookDetailResponse;
 import capstone.focus.dto.BookListResponse;
 import capstone.focus.dto.BookResponse;
+import capstone.focus.dto.ChapterDetailResponse;
 import capstone.focus.repository.BookRepository;
 import capstone.focus.repository.ChapterRepository;
 import lombok.RequiredArgsConstructor;
@@ -45,5 +48,14 @@ public class BookService {
         int chapterCount = chapterRepository.chapterNumberOf(book);
 
         return new BookDetailResponse(book, chapterCount);
+    }
+
+    public ChapterDetailResponse chapterDetail(Long bookId, int chapterSeq) {
+        // TODO 해당 seq의 챕터가 없을 경우 예외 처리
+        ChapterId chapterId = new ChapterId(chapterSeq, bookId);
+        Chapter chapter = chapterRepository.findById(chapterId)
+                .orElseThrow();
+
+        return new ChapterDetailResponse(chapter.getDescription());
     }
 }
