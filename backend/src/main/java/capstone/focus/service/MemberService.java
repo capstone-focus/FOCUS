@@ -26,7 +26,7 @@ public class MemberService {
         // TODO 해당하는 이메일이 없을 경우 예외 처리
         Member member = memberRepository.findByEmail(loginRequest.getEmail())
                 .orElseThrow();
-        member.update(loginRequest.getName(), loginRequest.getAccessToken(), loginRequest.getRefreshToken());
+        member.update(loginRequest.getName());
     }
 
     public SignUpResponse signUp(LoginRequest loginRequest) {
