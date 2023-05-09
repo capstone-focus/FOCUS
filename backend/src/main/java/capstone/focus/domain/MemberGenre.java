@@ -1,6 +1,7 @@
 package capstone.focus.domain;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -27,4 +28,10 @@ public class MemberGenre {
 
     @Column(name = "is_deleted", columnDefinition = "boolean default false")
     private boolean isDeleted;
+
+    @Builder
+    public MemberGenre(Member member, Genre genre) {
+        this.member = member;
+        this.genre = genre;
+    }
 }
