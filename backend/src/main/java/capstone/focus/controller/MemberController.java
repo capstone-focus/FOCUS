@@ -36,6 +36,8 @@ public class MemberController {
     public ResponseEntity<?> logout(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (session != null) {
+            Long memberId = (Long)session.getAttribute("member");
+            log.info("memberId: {}", memberId);
             session.invalidate();
         }
 
