@@ -10,6 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @Controller
@@ -20,13 +22,13 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody @Valid LoginRequest loginRequest) {
-        if (memberService.isSignUp(loginRequest.getEmail())) {
-            memberService.login(loginRequest);
-            Message message = new Message("Login Success");
-            return ResponseEntity.ok(message);
-        }
+    public ResponseEntity<?> login(@RequestBody @Valid LoginRequest loginRequest, HttpServletRequest request) {
+        Message message = new Message(memberService.isSignUp(loginRequest.getEmail()) ? "Login Success" : "First Login Success");
 
-        return ResponseEntity.ok(memberService.signUp(loginRequest));
+        Long memberId = memberService.loginOrSignUp(loginRequest);
+        HttpSession session = request.getSession();
+        session.setAttribute("member", memberId);
+
+        return ResponseEntity.ok(message);
     }
 }
