@@ -1,12 +1,17 @@
 package capstone.focus.service;
 
+import capstone.focus.domain.Genre;
 import capstone.focus.domain.Member;
+import capstone.focus.domain.MemberGenre;
 import capstone.focus.dto.LoginRequest;
+import capstone.focus.repository.GenreRepository;
+import capstone.focus.repository.MemberGenreRepository;
 import capstone.focus.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -15,6 +20,8 @@ import java.util.Optional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final GenreRepository genreRepository;
+    private final MemberGenreRepository memberGenreRepository;
 
     public boolean isSignUp(String email) {
         Optional<Member> member = memberRepository.findByEmail(email);
@@ -43,6 +50,39 @@ public class MemberService {
         memberRepository.save(member);
 
         return member.getId();
+    }
+
+    public void updateGenres(Long memberId, List<String> newGenres) {
+        // TODO 해당하는 id의 회원이 없을 경우 예외 처리
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow();
+
+        deleteExistingGenres(newGenres, member);
+        updateWithNewGenres(newGenres, member);
+    }
+
+    private void deleteExistingGenres(List<String> newGenres, Member member) {
+        List<MemberGenre> existingMemberGenres = memberGenreRepository.findByMemberAndIsDeletedFalse(member);
+        existingMemberGenres.stream()
+                .filter(existingMemberGenre -> !newGenres.contains(existingMemberGenre.getGenre().getName()))
+                .forEach(memberGenreRepository::delete);
+    }
+
+    private void updateWithNewGenres(List<String> newGenres, Member member) {
+        for (String name: newGenres) {
+            Genre newGenre = genreRepository.findByName(name);
+            Optional<MemberGenre> memberGenre = memberGenreRepository.findByMemberAndGenre(member, newGenre);
+
+            if (memberGenre.isPresent()) {
+                memberGenreRepository.addMemberGenre(memberGenre.get().getId());
+                continue;
+            }
+
+            memberGenreRepository.save(MemberGenre.builder()
+                    .member(member)
+                    .genre(newGenre)
+                    .build());
+        }
     }
 
 }
