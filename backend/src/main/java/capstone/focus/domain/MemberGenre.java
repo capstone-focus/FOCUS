@@ -4,11 +4,13 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "member_genre")
+@SQLDelete(sql = "update member_genre set is_deleted = true WHERE member_genre_id = ?")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemberGenre {
