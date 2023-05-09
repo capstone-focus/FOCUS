@@ -31,4 +31,14 @@ public class MemberController {
 
         return ResponseEntity.ok(message);
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+
+        return ResponseEntity.ok(new Message("Logout Success"));
+    }
 }
