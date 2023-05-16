@@ -52,7 +52,7 @@ public class MemberService {
         return member.getId();
     }
 
-    public void updateGenres(Long memberId, List<String> newGenres) {
+    public void registerGenres(Long memberId, List<String> newGenres) {
         // TODO 해당하는 id의 회원이 없을 경우 예외 처리
         Member member = memberRepository.findById(memberId)
                 .orElseThrow();

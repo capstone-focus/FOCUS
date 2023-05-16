@@ -47,9 +47,9 @@ public class MemberController {
     }
 
     @PostMapping("/profile/music-genres")
-    public ResponseEntity<?> updateMusicGenrePreference(@RequestBody @Valid GenreListRequest genreListRequest,
-                                                        @SessionAttribute(name = "member") Long memberId) {
-        memberService.updateGenres(memberId, genreListRequest.getGenres());
+    public ResponseEntity<?> registerMusicGenrePreference(@RequestBody @Valid GenreListRequest genreListRequest,
+                                                          @SessionAttribute(name = "member") Long memberId) {
+        memberService.registerGenres(memberId, genreListRequest.getGenres());
         return ResponseEntity.ok(new Message("success"));
     }
 }
