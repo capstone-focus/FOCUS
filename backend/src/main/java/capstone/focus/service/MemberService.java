@@ -62,27 +62,22 @@ public class MemberService {
     }
 
     private void deleteExistingGenres(List<String> newGenres, Member member) {
-        List<MemberGenre> existingMemberGenres = memberGenreRepository.findByMemberAndIsDeletedFalse(member);
+        List<MemberGenre> existingMemberGenres = memberGenreRepository.findByMember(member);
         existingMemberGenres.stream()
                 .filter(existingMemberGenre -> !newGenres.contains(existingMemberGenre.getGenre().getName()))
                 .forEach(memberGenreRepository::delete);
     }
 
     private void updateWithNewGenres(List<String> newGenres, Member member) {
-        for (String name: newGenres) {
+        for (String name : newGenres) {
             Genre newGenre = genreRepository.findByName(name);
-            Optional<MemberGenre> memberGenre = memberGenreRepository.findByMemberAndGenre(member, newGenre);
 
-            if (memberGenre.isPresent()) {
-                memberGenreRepository.addMemberGenre(memberGenre.get().getId());
-                continue;
+            if (memberGenreRepository.findByMemberAndGenre(member, newGenre).isEmpty()) {
+                memberGenreRepository.save(MemberGenre.builder()
+                        .member(member)
+                        .genre(newGenre)
+                        .build());
             }
-
-            memberGenreRepository.save(MemberGenre.builder()
-                    .member(member)
-                    .genre(newGenre)
-                    .build());
         }
     }
-
 }

@@ -10,7 +10,6 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "member_genre")
-@SQLDelete(sql = "update member_genre set is_deleted = true WHERE member_genre_id = ?")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemberGenre {
@@ -27,9 +26,6 @@ public class MemberGenre {
     @ManyToOne
     @JoinColumn(name = "genre_id")
     private Genre genre;
-
-    @Column(name = "is_deleted", columnDefinition = "boolean default false")
-    private boolean isDeleted;
 
     @Builder
     public MemberGenre(Member member, Genre genre) {
