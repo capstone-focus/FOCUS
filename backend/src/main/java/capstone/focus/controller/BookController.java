@@ -23,9 +23,4 @@ public class BookController {
     public ResponseEntity<?> bookDetail(@PathVariable Long bookId) {
         return ResponseEntity.ok(bookService.bookDetail(bookId));
     }
-
-    @GetMapping("/books/{bookId}/chapters/{chapterSeq}")
-    public ResponseEntity<?> chapterDetail(@PathVariable Long bookId, @PathVariable int chapterSeq) {
-        return ResponseEntity.ok(bookService.chapterDetail(bookId, chapterSeq));
-    }
 }
