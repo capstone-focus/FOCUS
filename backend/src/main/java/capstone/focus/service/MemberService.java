@@ -3,6 +3,7 @@ package capstone.focus.service;
 import capstone.focus.domain.Genre;
 import capstone.focus.domain.Member;
 import capstone.focus.domain.MemberGenre;
+import capstone.focus.dto.GenreListResponse;
 import capstone.focus.dto.LoginRequest;
 import capstone.focus.repository.GenreRepository;
 import capstone.focus.repository.MemberGenreRepository;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -79,5 +81,20 @@ public class MemberService {
                         .build());
             }
         }
+    }
+
+    public GenreListResponse getGenres(Long memberId) {
+        // TODO 해당하는 id의 회원이 없을 경우 예외 처리
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow();
+        List<MemberGenre> memberGenres = memberGenreRepository.findByMember(member);
+
+        return new GenreListResponse(getGenreNames(memberGenres));
+    }
+
+    private List<String> getGenreNames(List<MemberGenre> memberGenres) {
+        List<String> genres = new ArrayList<>();
+        memberGenres.forEach(memberGenre -> genres.add(memberGenre.getGenre().getName()));
+        return genres;
     }
 }
