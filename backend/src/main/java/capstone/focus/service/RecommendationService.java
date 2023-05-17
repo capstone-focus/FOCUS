@@ -27,16 +27,9 @@ public class RecommendationService {
     private final ChapterRepository chapterRepository;
 
     public void recommendWithBookChapter(Long memberId, Long bookId, int chapterSeq) {
-        // TODO 해당하는 id의 회원이 없을 경우 예외 처리
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow();
-        List<MemberGenre> memberGenres = memberGenreRepository.findByMember(member);
-        String genres = getGenreNames(memberGenres);
+        String genres = getPreferredGenresOf(memberId);
 
-        // TODO 해당 seq의 챕터가 없을 경우 예외 처리
-        ChapterId chapterId = new ChapterId(chapterSeq, bookId);
-        Chapter chapter = chapterRepository.findById(chapterId)
-                .orElseThrow();
+        Chapter chapter = getChapter(bookId, chapterSeq);
         String chapterDescription = chapter.getDescription();
         String bookTitle = chapter.getBook().getTitle();
 
@@ -50,9 +43,24 @@ public class RecommendationService {
         System.out.println(responseMessage);
     }
 
+    private String getPreferredGenresOf(Long memberId) {
+        // TODO 해당하는 id의 회원이 없을 경우 예외 처리
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow();
+        List<MemberGenre> memberGenres = memberGenreRepository.findByMember(member);
+        return getGenreNames(memberGenres);
+    }
+
     private String getGenreNames(List<MemberGenre> memberGenres) {
         List<String> genres = new ArrayList<>();
         memberGenres.forEach(memberGenre -> genres.add(memberGenre.getGenre().getName()));
         return String.join(", ", genres.toArray(new String[0]));
+    }
+
+    private Chapter getChapter(Long bookId, int chapterSeq) {
+        ChapterId chapterId = new ChapterId(chapterSeq, bookId);
+        // TODO 해당 seq의 챕터가 없을 경우 예외 처리
+        return chapterRepository.findById(chapterId)
+                .orElseThrow();
     }
 }
