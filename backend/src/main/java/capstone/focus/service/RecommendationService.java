@@ -40,11 +40,11 @@ public class RecommendationService {
         String chapterDescription = chapter.getDescription();
         String bookTitle = chapter.getBook().getTitle();
 
-        String recommendRequestMessage = ChatGptRequestStringConst.bookName + bookTitle + ChatGptRequestStringConst.chapterSummaryAnalysis + chapterDescription + ChatGptRequestStringConst.customerInfoPrefix + genres + ChatGptRequestStringConst.customerInfoSuffix;
+        String recommendRequestMessage = ChatGptRequestConst.bookName + bookTitle + ChatGptRequestConst.chapterSummaryAnalysis + chapterDescription + ChatGptRequestConst.customerInfoPrefix + genres + ChatGptRequestConst.customerInfoSuffix;
 
         List<MultiChatMessage> messages = Arrays.asList(
-                new MultiChatMessage("user", ChatGptRequestStringConst.userMessage),
-                new MultiChatMessage("assistant", ChatGptRequestStringConst.assistantMessage),
+                new MultiChatMessage("user", ChatGptRequestConst.userMessage),
+                new MultiChatMessage("assistant", ChatGptRequestConst.assistantMessage),
                 new MultiChatMessage("user", recommendRequestMessage));
         String responseMessage = chatgptService.multiChat(messages);
         System.out.println(responseMessage);

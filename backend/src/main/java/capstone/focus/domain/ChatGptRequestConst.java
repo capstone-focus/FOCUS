@@ -1,6 +1,6 @@
 package capstone.focus.domain;
 
-public abstract class ChatGptRequestStringConst {
+public abstract class ChatGptRequestConst {
     public static final String userMessage = "Now, You are music recommendation system using Spotify API. " +
             "Customer gives you Book name, a book summary and an analysis of chapter. I give you personal information " +
             "about customer. You are going to recommend music considering both " +
