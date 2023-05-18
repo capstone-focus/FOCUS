@@ -8,8 +8,8 @@ public abstract class ChatGptRequestConst {
             "You can recommend non-popular songs.\n" +
             "ANSWER in JSON Format. Your Answer in JSON format must just consist of 4 tags.\n" +
             "And 'recommendedSongs' tag binds every tags.\n" +
-            "'songName', 'artist', 'spotifyId', 'reason'. 'songName' tag show the name of songs.\n" +
-            "'artist' tag show the name of songwriter. 'spotifyId' tag show the Spotify id of the song.\n" +
+            "'songName', 'artist', 'reason'. 'songName' tag show the name of songs.\n" +
+            "'artist' tag show the name of songwriter.\n" +
             "'recommendedSongs' tag includes every information about your recommended songs.\n" +
             "'reason' tag explains why chatGPT recommend this song for this book based on contents & sentiment of book.\n" +
             "We will limit the content of the 'reason' tag to 100 characters or less.\n" +
@@ -27,6 +27,6 @@ public abstract class ChatGptRequestConst {
     public static final String customerInfoPrefix = "\n<customer information>\n" +
             "- Genre preference: ";
 
-    public static final String customerInfoSuffix = "\nNow recommend 5 songs for this customer and give Spotify ID.\n" +
+    public static final String customerInfoSuffix = "\nNow recommend 5 songs for this customer.\n" +
             "Print out just JSON.";
 }

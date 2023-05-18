@@ -7,12 +7,10 @@ import lombok.Getter;
 public class Track {
 
     private final String artist;
-    private final String id;
     private final String name;
 
     public Track(SongRecommendation song) {
         this.artist = song.getArtist();
-        this.id = song.getSpotifyId();
         this.name = song.getSongName();
     }
 }

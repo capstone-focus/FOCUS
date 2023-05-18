@@ -9,6 +9,5 @@ public class SongRecommendation {
 
     private String songName;
     private String artist;
-    private String spotifyId;
     private String reason;
 }

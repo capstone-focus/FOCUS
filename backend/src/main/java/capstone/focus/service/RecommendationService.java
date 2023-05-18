@@ -91,7 +91,6 @@ public class RecommendationService {
 
             log.info("Song Name: {}", song.getSongName());
             log.info("Artist: {}", song.getArtist());
-            log.info("Spotify ID: {}", song.getSpotifyId());
             log.info("Reason: {}", song.getReason());
         }
 
