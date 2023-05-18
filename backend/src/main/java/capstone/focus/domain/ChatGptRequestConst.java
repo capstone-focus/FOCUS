@@ -7,10 +7,10 @@ public abstract class ChatGptRequestConst {
             "book and personal information. You should mainly considering contents & sentiment of the book and Genre Preference and Age of customer.\n" +
             "You can recommend non-popular songs.\n" +
             "ANSWER in JSON Format. Your Answer in JSON format must just consist of 4 tags.\n" +
-            "And 'recommended_songs' tag binds every tags.\n" +
-            "'song_name', 'artist', 'spotify_id', 'reason'. 'song_name' tag show the name of songs.\n" +
-            "'artist' tag show the name of songwriter. 'spotify_id' tag show the Spotify id of the song.\n" +
-            "'recommended_songs' tag includes every information about your recommended songs.\n" +
+            "And 'recommendedSongs' tag binds every tags.\n" +
+            "'songName', 'artist', 'spotifyId', 'reason'. 'songName' tag show the name of songs.\n" +
+            "'artist' tag show the name of songwriter. 'spotifyId' tag show the Spotify id of the song.\n" +
+            "'recommendedSongs' tag includes every information about your recommended songs.\n" +
             "'reason' tag explains why chatGPT recommend this song for this book based on contents & sentiment of book.\n" +
             "NEVER response any other explanation except JSON Format. Response JUST JSON Format.";
 
