@@ -18,6 +18,8 @@ public class Book {
 
     private String title;
     private String author;
+
+    @Column(columnDefinition = "text")
     private String description;
 
     @Column(name = "image_url")
