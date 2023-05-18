@@ -40,14 +40,9 @@ public class RecommendationService {
         Chapter chapter = getChapter(bookId, chapterSeq);
         String chapterDescription = chapter.getDescription();
         String bookTitle = chapter.getBook().getTitle();
-
         String recommendRequestMessage = ChatGptRequestConst.bookName + bookTitle + ChatGptRequestConst.chapterSummaryAnalysis + chapterDescription + ChatGptRequestConst.customerInfoPrefix + genres + ChatGptRequestConst.customerInfoSuffix;
 
-        List<MultiChatMessage> messages = Arrays.asList(
-                new MultiChatMessage("user", ChatGptRequestConst.userMessage),
-                new MultiChatMessage("assistant", ChatGptRequestConst.assistantMessage),
-                new MultiChatMessage("user", recommendRequestMessage));
-        String responseMessage = chatgptService.multiChat(messages);
+        String responseMessage = sendChatGptRequest(recommendRequestMessage);
 
         return getTrackList(responseMessage);
     }
@@ -71,6 +66,14 @@ public class RecommendationService {
         // TODO 해당 seq의 챕터가 없을 경우 예외 처리
         return chapterRepository.findById(chapterId)
                 .orElseThrow();
+    }
+
+    private String sendChatGptRequest(String recommendRequestMessage) {
+        List<MultiChatMessage> messages = Arrays.asList(
+                new MultiChatMessage("user", ChatGptRequestConst.userMessage),
+                new MultiChatMessage("assistant", ChatGptRequestConst.assistantMessage),
+                new MultiChatMessage("user", recommendRequestMessage));
+        return chatgptService.multiChat(messages);
     }
 
     private TrackListResponse getTrackList(String responseMessage) {
