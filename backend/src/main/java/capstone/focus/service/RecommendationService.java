@@ -1,11 +1,14 @@
 package capstone.focus.service;
 
 import capstone.focus.domain.*;
+import capstone.focus.dto.Track;
+import capstone.focus.dto.TrackListResponse;
 import capstone.focus.dto.chatgpt.SongRecommendation;
 import capstone.focus.dto.chatgpt.SongRecommendationResponse;
 import capstone.focus.repository.ChapterRepository;
 import capstone.focus.repository.MemberGenreRepository;
 import capstone.focus.repository.MemberRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.flashvayne.chatgpt.dto.chat.MultiChatMessage;
 import io.github.flashvayne.chatgpt.service.ChatgptService;
@@ -31,7 +34,7 @@ public class RecommendationService {
     private final MemberGenreRepository memberGenreRepository;
     private final ChapterRepository chapterRepository;
 
-    public void recommendWithBookChapter(Long memberId, Long bookId, int chapterSeq) {
+    public TrackListResponse recommendWithBookChapter(Long memberId, Long bookId, int chapterSeq) {
         String genres = getPreferredGenresOf(memberId);
 
         Chapter chapter = getChapter(bookId, chapterSeq);
@@ -45,7 +48,8 @@ public class RecommendationService {
                 new MultiChatMessage("assistant", ChatGptRequestConst.assistantMessage),
                 new MultiChatMessage("user", recommendRequestMessage));
         String responseMessage = chatgptService.multiChat(messages);
-        parseJsonToObject(responseMessage);
+
+        return getTrackList(responseMessage);
     }
 
     private String getPreferredGenresOf(Long memberId) {
@@ -69,19 +73,30 @@ public class RecommendationService {
                 .orElseThrow();
     }
 
-    private void parseJsonToObject(String responseMessage) {
-        ObjectMapper objectMapper = new ObjectMapper();
-
+    private TrackListResponse getTrackList(String responseMessage) {
+        SongRecommendationResponse response = new SongRecommendationResponse();
         try {
-            SongRecommendationResponse response = objectMapper.readValue(responseMessage, SongRecommendationResponse.class);
-            for (SongRecommendation song : response.getRecommendedSongs()) {
-                log.info("Song Name: {}", song.getSongName());
-                log.info("Artist: {}", song.getArtist());
-                log.info("Spotify ID: {}", song.getSpotifyId());
-                log.info("Reason: {}", song.getReason());
-            }
+            response = parseJsonToObject(responseMessage);
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        List<Track> tracks = new ArrayList<>();
+
+        for (SongRecommendation song : response.getRecommendedSongs()) {
+            tracks.add(new Track(song));
+
+            log.info("Song Name: {}", song.getSongName());
+            log.info("Artist: {}", song.getArtist());
+            log.info("Spotify ID: {}", song.getSpotifyId());
+            log.info("Reason: {}", song.getReason());
+        }
+
+        return new TrackListResponse(tracks);
+    }
+
+    private SongRecommendationResponse parseJsonToObject(String responseMessage) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.readValue(responseMessage, SongRecommendationResponse.class);
     }
 }
