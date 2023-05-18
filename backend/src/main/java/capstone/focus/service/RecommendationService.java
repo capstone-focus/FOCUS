@@ -1,9 +1,12 @@
 package capstone.focus.service;
 
 import capstone.focus.domain.*;
+import capstone.focus.dto.chatgpt.SongRecommendation;
+import capstone.focus.dto.chatgpt.SongRecommendationResponse;
 import capstone.focus.repository.ChapterRepository;
 import capstone.focus.repository.MemberGenreRepository;
 import capstone.focus.repository.MemberRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.flashvayne.chatgpt.dto.chat.MultiChatMessage;
 import io.github.flashvayne.chatgpt.service.ChatgptService;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -22,6 +26,7 @@ import java.util.List;
 public class RecommendationService {
 
     private final ChatgptService chatgptService;
+
     private final MemberRepository memberRepository;
     private final MemberGenreRepository memberGenreRepository;
     private final ChapterRepository chapterRepository;
@@ -40,7 +45,7 @@ public class RecommendationService {
                 new MultiChatMessage("assistant", ChatGptRequestConst.assistantMessage),
                 new MultiChatMessage("user", recommendRequestMessage));
         String responseMessage = chatgptService.multiChat(messages);
-        System.out.println(responseMessage);
+        parseJsonToObject(responseMessage);
     }
 
     private String getPreferredGenresOf(Long memberId) {
@@ -62,5 +67,21 @@ public class RecommendationService {
         // TODO 해당 seq의 챕터가 없을 경우 예외 처리
         return chapterRepository.findById(chapterId)
                 .orElseThrow();
+    }
+
+    private void parseJsonToObject(String responseMessage) {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        try {
+            SongRecommendationResponse response = objectMapper.readValue(responseMessage, SongRecommendationResponse.class);
+            for (SongRecommendation song : response.getRecommendedSongs()) {
+                log.info("Song Name: {}", song.getSongName());
+                log.info("Artist: {}", song.getArtist());
+                log.info("Spotify ID: {}", song.getSpotifyId());
+                log.info("Reason: {}", song.getReason());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
