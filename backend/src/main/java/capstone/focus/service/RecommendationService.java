@@ -81,6 +81,7 @@ public class RecommendationService {
         try {
             response = parseJsonToObject(responseMessage);
         } catch (IOException e) {
+            // TODO 예외처리
             e.printStackTrace();
         }
 

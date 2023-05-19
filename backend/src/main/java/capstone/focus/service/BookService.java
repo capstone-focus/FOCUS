@@ -32,7 +32,7 @@ public class BookService {
         Page<Book> books = bookRepository.findAll(pageable);
 
         List<BookResponse> booksResponse = books.stream()
-                .map(book -> new BookResponse(book))
+                .map(BookResponse::new)
                 .collect(Collectors.toList());
 
         return new BookListResponse(booksResponse);
@@ -45,5 +45,12 @@ public class BookService {
         int chapterCount = chapterRepository.chapterNumberOf(book);
 
         return new BookDetailResponse(book, chapterCount);
+    }
+
+    public String getBookTitle(Long bookId) {
+        // TODO 해당 id의 책이 없을 경우 예외 처리
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow();
+        return book.getTitle();
     }
 }
