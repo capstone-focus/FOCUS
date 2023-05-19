@@ -23,5 +23,6 @@ public class Chapter {
     @JoinColumn(name = "book_id")
     private Book book;
 
+    @Column(columnDefinition = "text")
     private String description;
 }
