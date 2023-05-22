@@ -29,6 +29,7 @@ import java.util.List;
 public class RecommendationService {
 
     private final ChatgptService chatgptService;
+    private final LocalFileService localFileService;
 
     private final MemberRepository memberRepository;
     private final MemberGenreRepository memberGenreRepository;
@@ -38,8 +39,8 @@ public class RecommendationService {
         String genres = getPreferredGenresOf(memberId);
 
         Chapter chapter = getChapter(bookId, chapterSeq);
-        String chapterDescription = chapter.getDescription();
         String bookTitle = chapter.getBook().getTitle();
+        String chapterDescription = localFileService.getChapterDescription(bookTitle, chapterSeq);
         String recommendRequestMessage = ChatGptRequestConst.bookName + bookTitle + ChatGptRequestConst.chapterSummaryAnalysis + chapterDescription + ChatGptRequestConst.customerInfoPrefix + genres + ChatGptRequestConst.customerInfoSuffix;
 
         String responseMessage = sendChatGptRequest(recommendRequestMessage);
