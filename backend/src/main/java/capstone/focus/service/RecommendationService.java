@@ -35,8 +35,8 @@ public class RecommendationService {
     private final MemberGenreRepository memberGenreRepository;
     private final ChapterRepository chapterRepository;
 
-    public TrackListResponse recommendWithBookChapter(Long memberId, Long bookId, int chapterSeq) {
-        String genres = getPreferredGenresOf(memberId);
+    public TrackListResponse recommendWithBookChapter(String email, Long bookId, int chapterSeq) {
+        String genres = getPreferredGenresOf(email);
 
         Chapter chapter = getChapter(bookId, chapterSeq);
         String bookTitle = chapter.getBook().getTitle();
@@ -48,9 +48,9 @@ public class RecommendationService {
         return getTrackList(responseMessage);
     }
 
-    private String getPreferredGenresOf(Long memberId) {
-        // TODO 해당하는 id의 회원이 없을 경우 예외 처리
-        Member member = memberRepository.findById(memberId)
+    private String getPreferredGenresOf(String email) {
+        // TODO 해당하는 이메일의 회원이 없을 경우 예외 처리
+        Member member = memberRepository.findByEmail(email)
                 .orElseThrow();
         List<MemberGenre> memberGenres = memberGenreRepository.findByMember(member);
         return getGenreNames(memberGenres);

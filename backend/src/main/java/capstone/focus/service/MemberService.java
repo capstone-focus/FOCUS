@@ -39,7 +39,7 @@ public class MemberService {
     }
 
     public Long login(LoginRequest loginRequest) {
-        // TODO 해당하는 이메일이 없을 경우 예외 처리
+        // TODO 해당하는 이메일의 회원이 없을 경우 예외 처리
         Member member = memberRepository.findByEmail(loginRequest.getEmail())
                 .orElseThrow();
         member.update(loginRequest.getName());
@@ -54,9 +54,9 @@ public class MemberService {
         return member.getId();
     }
 
-    public void registerGenres(Long memberId, List<String> newGenres) {
-        // TODO 해당하는 id의 회원이 없을 경우 예외 처리
-        Member member = memberRepository.findById(memberId)
+    public void registerGenres(String email, List<String> newGenres) {
+        // TODO 해당하는 이메일의 회원이 없을 경우 예외 처리
+        Member member = memberRepository.findByEmail(email)
                 .orElseThrow();
 
         deleteExistingGenres(newGenres, member);
@@ -83,9 +83,9 @@ public class MemberService {
         }
     }
 
-    public GenreListResponse getGenres(Long memberId) {
-        // TODO 해당하는 id의 회원이 없을 경우 예외 처리
-        Member member = memberRepository.findById(memberId)
+    public GenreListResponse getGenres(String email) {
+        // TODO 해당하는 이메일의 회원이 없을 경우 예외 처리
+        Member member = memberRepository.findByEmail(email)
                 .orElseThrow();
         List<MemberGenre> memberGenres = memberGenreRepository.findByMember(member);
 
