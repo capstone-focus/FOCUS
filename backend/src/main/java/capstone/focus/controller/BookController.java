@@ -21,8 +21,8 @@ public class BookController {
     private final LocalFileService localFileService;
 
     @GetMapping("/books")
-    public ResponseEntity<?> bookList(@RequestParam(defaultValue = "0") int page) {
-        return ResponseEntity.ok(bookService.bookList(page));
+    public ResponseEntity<?> bookList(@RequestParam(defaultValue = "1") int page) {
+        return ResponseEntity.ok(bookService.bookList(page - 1));
     }
 
     @GetMapping("/books/{bookId}")

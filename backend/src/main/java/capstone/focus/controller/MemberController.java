@@ -23,11 +23,7 @@ public class MemberController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody @Valid LoginRequest loginRequest, HttpServletRequest request) {
         Message message = new Message(memberService.isSignUp(loginRequest.getEmail()) ? "Login Success" : "First Login Success");
-
         Long memberId = memberService.loginOrSignUp(loginRequest);
-        HttpSession session = request.getSession();
-        session.setAttribute("member", memberId);
-
         return ResponseEntity.ok(message);
     }
 
@@ -35,8 +31,6 @@ public class MemberController {
     public ResponseEntity<?> logout(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (session != null) {
-            Long memberId = (Long) session.getAttribute("member");
-            log.info("memberId: {}", memberId);
             session.invalidate();
         }
 
@@ -45,13 +39,16 @@ public class MemberController {
 
     @PostMapping("/profile/music-genres")
     public ResponseEntity<?> registerMusicGenrePreference(@RequestBody @Valid GenreListRequest genreListRequest,
-                                                          @SessionAttribute(name = "member") Long memberId) {
-        memberService.registerGenres(memberId, genreListRequest.getGenres());
+                                                          HttpServletRequest request) {
+
+        String email = request.getHeader("email");
+        memberService.registerGenres(email, genreListRequest.getGenres());
         return ResponseEntity.ok(new Message("success"));
     }
 
     @GetMapping("/profile/music-genres")
-    public ResponseEntity<?> getMusicGenrePreference(@SessionAttribute(name = "member") Long memberId) {
-        return ResponseEntity.ok(memberService.getGenres(memberId));
+    public ResponseEntity<?> getMusicGenrePreference(HttpServletRequest request) {
+        String email = request.getHeader("email");
+        return ResponseEntity.ok(memberService.getGenres(email));
     }
 }
